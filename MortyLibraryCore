@@ -1,0 +1,2162 @@
+return function(C0)
+local player = game:GetService("Players").LocalPlayer
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local GuiService = game:GetService("GuiService")
+local camera = workspace.CurrentCamera
+assert(player, "ChilliLibrary chi co the chay mot lan o phia client")
+local playerGui = player:WaitForChild("PlayerGui")
+​local ROOT_GUI_NAME = "Settings"
+local LAUNCHER_GUI_NAME = "ChilliLeftCenter"
+local OWNER_ATTRIBUTE = "ChilliLibraryOwned"
+local parent = CoreGui
+local parentName = "CoreGui"
+do
+local hiddenOk, hiddenParent = pcall(function()
+return gethui()
+end)
+if hiddenOk and typeof(hiddenParent) == "Instance" then
+parent = hiddenParent
+parentName = "HiddenUI"
+end
+​local ok, problem = pcall(function()
+local probe = Instance.new("ScreenGui")
+probe.Name = "ChilliLibraryUIProbe"
+probe.Parent = parent
+probe:Destroy()
+end)
+if not ok then
+error(
+"ChilliLibrary requires write access to "
+.. parentName
+.. "; PlayerGui fallback is disabled: "
+.. tostring(problem),
+0
+)
+end
+end
+​local function createEmbeddedSpider()
+local spider = Instance.new("MeshPart")
+spider.Name = "Spider"
+spider.Archivable = true
+spider.Anchored = true
+spider.BackSurface = Enum.SurfaceType.Smooth
+spider.BottomSurface = Enum.SurfaceType.Smooth
+spider.BrickColor = BrickColor.new("Institutional white")
+spider.CanCollide = false
+spider.CanQuery = false
+spider.CanTouch = false
+spider.CastShadow = true
+spider.Color = Color3.new(1, 1, 1)
+spider.FrontSurface = Enum.SurfaceType.Smooth
+spider.LeftSurface = Enum.SurfaceType.Smooth
+spider.Massless = true
+spider.Material = Enum.Material.Plastic
+spider.Reflectance = 0
+spider.RightSurface = Enum.SurfaceType.Smooth
+spider.RootPriority = -5
+spider.Size = Vector3.new(
+0.9052265286445618,
+0.24434703588485718,
+0.9125359058380127
+)
+spider.TopSurface = Enum.SurfaceType.Smooth
+spider.Transparency = 0
+spider.MeshId = "rbxassetid://135715081992798"
+spider.TextureID = ""
+spider.DoubleSided = false
+spider.RenderFidelity = Enum.RenderFidelity.Automatic
+spider.CollisionFidelity = Enum.CollisionFidelity.Box
+spider.CFrame = CFrame.new()
+​local headAttachment = Instance.new("Attachment")
+headAttachment.Name = "HeadAttachment"
+headAttachment.CFrame = CFrame.new(
+0.72625732421875,
+-0.504150390625,
+0.3289794921875,
+0.7071012258529663,
+-0.7068588733673096,
+-0.01893438585102558,
+-0.000011771917343139648,
+0.026765286922454834,
+-0.9996418952941895,
+0.7071123719215393,
+0.70684814453125,
+0.018917446956038475
+)
+headAttachment.Parent = spider
+​return spider
+end
+​local cleanupNames = {
+[ROOT_GUI_NAME] = true,
+[LAUNCHER_GUI_NAME] = true,
+ChilliLibrarySettings = true,
+ChilliLibraryLauncher = true,
+}
+local function cleanupOldUiScreens(excludedRoot, excludedLauncher)
+for _, old in ipairs(parent:GetChildren()) do
+if old ~= excludedRoot
+and old ~= excludedLauncher
+and old:IsA("ScreenGui")
+and cleanupNames[old.Name]
+then
+local restorePosition = old:GetAttribute(
+"HudRestorePosition"
+)
+local hiddenByLibrary = old:GetAttribute(
+"LeftCenterHiddenByLibrary"
+) == true
+local screenDisabledByLibrary = old:GetAttribute(
+"LeftCenterScreenDisabledByLibrary"
+) == true
+if typeof(restorePosition) == "UDim2"
+or hiddenByLibrary
+or screenDisabledByLibrary
+then
+local oldLeftCenterScreen = playerGui:FindFirstChild(
+"LeftCenter"
+)
+local oldLeftCenter = oldLeftCenterScreen
+and oldLeftCenterScreen:FindFirstChild("LeftCenter")
+if oldLeftCenter then
+if typeof(restorePosition) == "UDim2" then
+while restorePosition.X.Scale <= -0.5 do
+restorePosition = UDim2.new(
+restorePosition.X.Scale + 1,
+restorePosition.X.Offset,
+restorePosition.Y.Scale,
+restorePosition.Y.Offset
+)
+end
+oldLeftCenter.Position = restorePosition
+end
+if hiddenByLibrary then
+oldLeftCenter.Visible = true
+end
+end
+if screenDisabledByLibrary
+and oldLeftCenterScreen
+and oldLeftCenterScreen:IsA("ScreenGui")
+then
+oldLeftCenterScreen.Enabled = true
+end
+end
+old:Destroy()
+end
+end
+end
+cleanupOldUiScreens()
+​local function chilliSetProperty(instance, key, value)
+instance[key] = value
+end
+local objects = {}
+​objects.obj1 = Instance.new("ScreenGui")
+pcall(chilliSetProperty, objects.obj1, "Name", ROOT_GUI_NAME)
+pcall(chilliSetProperty, objects.obj1, "Archivable", true)
+objects.obj1:SetAttribute("MenuSize", UDim2.new(0.44999998807907104,0,0.550000011920929,0))
+objects.obj1:SetAttribute(OWNER_ATTRIBUTE, true)
+objects.obj1.Parent = parent
+​objects.obj2 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj2, "Name", "Frame")
+pcall(chilliSetProperty, objects.obj2, "Archivable", true)
+pcall(chilliSetProperty, objects.obj2, "Visible", true)
+pcall(chilliSetProperty, objects.obj2, "Active", false)
+pcall(chilliSetProperty, objects.obj2, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj2, "BackgroundColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj2, "BackgroundTransparency", 0.4000000059604645)
+pcall(chilliSetProperty, objects.obj2, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj2, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj2, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj2, "Position", UDim2.new(0.5,0,0.4749999940395355,0))
+pcall(chilliSetProperty, objects.obj2, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj2, "Selectable", false)
+pcall(chilliSetProperty, objects.obj2, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj2, "Size", UDim2.new(0.44999998807907104,0,0.550000011920929,0))
+pcall(chilliSetProperty, objects.obj2, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj2, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj2, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj2, "LayoutOrder", 0)
+objects.obj2.Parent = objects.obj1
+​objects.obj3 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj3, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj3, "Archivable", true)
+pcall(chilliSetProperty, objects.obj3, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj3, "Color", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj3, "Enabled", true)
+pcall(chilliSetProperty, objects.obj3, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj3, "Thickness", 0.00800000037997961)
+pcall(chilliSetProperty, objects.obj3, "Transparency", 0)
+objects.obj3.Parent = objects.obj2
+​objects.obj4 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj4, "Name", "Top")
+pcall(chilliSetProperty, objects.obj4, "Archivable", true)
+pcall(chilliSetProperty, objects.obj4, "Visible", true)
+pcall(chilliSetProperty, objects.obj4, "Active", false)
+pcall(chilliSetProperty, objects.obj4, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj4, "BackgroundColor3", Color3.fromRGB(200,80,0))
+pcall(chilliSetProperty, objects.obj4, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj4, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj4, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj4, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj4, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj4, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj4, "Selectable", false)
+pcall(chilliSetProperty, objects.obj4, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj4, "Size", UDim2.new(1,0,0.13500000536441803,0))
+pcall(chilliSetProperty, objects.obj4, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj4, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj4, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj4, "LayoutOrder", 0)
+objects.obj4.Parent = objects.obj2
+​objects.obj5 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj5, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj5, "Archivable", true)
+pcall(chilliSetProperty, objects.obj5, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj5, "Color", Color3.fromRGB(100,40,0))
+pcall(chilliSetProperty, objects.obj5, "Enabled", true)
+pcall(chilliSetProperty, objects.obj5, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj5, "Thickness", 0.05999999865889549)
+pcall(chilliSetProperty, objects.obj5, "Transparency", 0)
+objects.obj5.Parent = objects.obj4
+​objects.obj6 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj6, "Name", "Color")
+pcall(chilliSetProperty, objects.obj6, "Archivable", true)
+pcall(chilliSetProperty, objects.obj6, "Visible", true)
+pcall(chilliSetProperty, objects.obj6, "Active", false)
+pcall(chilliSetProperty, objects.obj6, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj6, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj6, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj6, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj6, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj6, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj6, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj6, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj6, "Selectable", false)
+pcall(chilliSetProperty, objects.obj6, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj6, "Size", UDim2.new(1,0,0.8799999952316284,0))
+pcall(chilliSetProperty, objects.obj6, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj6, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj6, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj6, "LayoutOrder", 0)
+objects.obj6.Parent = objects.obj4
+​objects.obj7 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj7, "Name", "Transparent")
+pcall(chilliSetProperty, objects.obj7, "Archivable", true)
+pcall(chilliSetProperty, objects.obj7, "Visible", true)
+pcall(chilliSetProperty, objects.obj7, "Active", false)
+pcall(chilliSetProperty, objects.obj7, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj7, "BackgroundColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BackgroundTransparency", 0.8999999761581421)
+pcall(chilliSetProperty, objects.obj7, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj7, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj7, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj7, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj7, "Selectable", false)
+pcall(chilliSetProperty, objects.obj7, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj7, "Size", UDim2.new(0.9879999756813049,0,0.8700000047683716,0))
+pcall(chilliSetProperty, objects.obj7, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj7, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj7, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj7, "LayoutOrder", 0)
+objects.obj7.Parent = objects.obj6
+​objects.obj8 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj8, "Name", "Pattern")
+pcall(chilliSetProperty, objects.obj8, "Archivable", true)
+pcall(chilliSetProperty, objects.obj8, "Visible", true)
+pcall(chilliSetProperty, objects.obj8, "Active", false)
+pcall(chilliSetProperty, objects.obj8, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj8, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj8, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj8, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj8, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj8, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj8, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj8, "Selectable", false)
+pcall(chilliSetProperty, objects.obj8, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj8, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj8, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj8, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj8, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj8, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj8, "Image", "")
+pcall(chilliSetProperty, objects.obj8, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "ImageTransparency", 0.5)
+pcall(chilliSetProperty, objects.obj8, "ScaleType", Enum.ScaleType.Tile)
+pcall(chilliSetProperty, objects.obj8, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj8, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj8, "TileSize", UDim2.new(0.15000000596046448,0,2,0))
+pcall(chilliSetProperty, objects.obj8, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj8.Parent = objects.obj7
+​objects.obj9 = Instance.new("TextLabel")
+pcall(chilliSetProperty, objects.obj9, "Name", "Label")
+pcall(chilliSetProperty, objects.obj9, "Archivable", true)
+pcall(chilliSetProperty, objects.obj9, "Visible", true)
+pcall(chilliSetProperty, objects.obj9, "Active", false)
+pcall(chilliSetProperty, objects.obj9, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj9, "BackgroundColor3", Color3.fromRGB(239,220,203))
+pcall(chilliSetProperty, objects.obj9, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj9, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj9, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj9, "Position", UDim2.new(0.5687711238861084,0,0.5,0))
+pcall(chilliSetProperty, objects.obj9, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj9, "Selectable", false)
+pcall(chilliSetProperty, objects.obj9, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj9, "Size", UDim2.new(0.8620089292526245,0,0.7499999403953552,0))
+pcall(chilliSetProperty, objects.obj9, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj9, "ZIndex", 6)
+pcall(chilliSetProperty, objects.obj9, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj9, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj9, "Text", "Morty Hub")
+pcall(chilliSetProperty, objects.obj9, "TextColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj9, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj9, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj9, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj9, "TextScaled", true)
+pcall(chilliSetProperty, objects.obj9, "TextWrapped", true)
+pcall(chilliSetProperty, objects.obj9, "TextXAlignment", Enum.TextXAlignment.Left)
+pcall(chilliSetProperty, objects.obj9, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj9, "Font", Enum.Font.FredokaOne)
+pcall(chilliSetProperty, objects.obj9, "RichText", false)
+pcall(chilliSetProperty, objects.obj9, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj9, "MaxVisibleGraphemes", -1)
+objects.obj9.Parent = objects.obj6
+​objects.obj10 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj10, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj10, "Archivable", true)
+pcall(chilliSetProperty, objects.obj10, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
+pcall(chilliSetProperty, objects.obj10, "Color", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj10, "Enabled", true)
+pcall(chilliSetProperty, objects.obj10, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj10, "Thickness", 0.07999999821186066)
+pcall(chilliSetProperty, objects.obj10, "Transparency", 0)
+objects.obj10.Parent = objects.obj9
+​objects.obj11 = Instance.new("UIGradient")
+pcall(chilliSetProperty, objects.obj11, "Name", "UIGradient")
+pcall(chilliSetProperty, objects.obj11, "Archivable", true)
+pcall(chilliSetProperty, objects.obj11, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,165,0)),ColorSequenceKeypoint.new(1,Color3.fromRGB(255,100,0))}))
+pcall(chilliSetProperty, objects.obj11, "Enabled", true)
+pcall(chilliSetProperty, objects.obj11, "Offset", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj11, "Rotation", 90)
+pcall(chilliSetProperty, objects.obj11, "Transparency", NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}))
+objects.obj11.Parent = objects.obj6
+​objects.obj12 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj12, "Name", "Icon")
+pcall(chilliSetProperty, objects.obj12, "Archivable", true)
+pcall(chilliSetProperty, objects.obj12, "Visible", true)
+pcall(chilliSetProperty, objects.obj12, "Active", false)
+pcall(chilliSetProperty, objects.obj12, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj12, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj12, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj12, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj12, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj12, "Position", UDim2.new(0.06700000166893005,0,0.44999998807907104,0))
+pcall(chilliSetProperty, objects.obj12, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj12, "Selectable", false)
+pcall(chilliSetProperty, objects.obj12, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj12, "Size", UDim2.new(0.11656716465950012,0,1.1833335161209106,0))
+pcall(chilliSetProperty, objects.obj12, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj12, "ZIndex", 4)
+pcall(chilliSetProperty, objects.obj12, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj12, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj12, "Image", "")
+pcall(chilliSetProperty, objects.obj12, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "ImageTransparency", 0)
+pcall(chilliSetProperty, objects.obj12, "ScaleType", Enum.ScaleType.Fit)
+pcall(chilliSetProperty, objects.obj12, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj12, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj12, "TileSize", UDim2.new(0,60,0,60))
+pcall(chilliSetProperty, objects.obj12, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj12.Parent = objects.obj4
+​objects.obj13 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj13, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj13, "Archivable", true)
+pcall(chilliSetProperty, objects.obj13, "AspectRatio", 1)
+pcall(chilliSetProperty, objects.obj13, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj13, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj13.Parent = objects.obj12
+​objects.obj14 = Instance.new("TextButton")
+pcall(chilliSetProperty, objects.obj14, "Name", "Close")
+pcall(chilliSetProperty, objects.obj14, "Archivable", true)
+pcall(chilliSetProperty, objects.obj14, "Visible", true)
+pcall(chilliSetProperty, objects.obj14, "Active", true)
+pcall(chilliSetProperty, objects.obj14, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj14, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj14, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj14, "BorderColor3", Color3.fromRGB(27,42,53))
+pcall(chilliSetProperty, objects.obj14, "BorderSizePixel", 1)
+pcall(chilliSetProperty, objects.obj14, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj14, "Position", UDim2.new(0.9549999833106995,0,0.4339999854564667,0))
+pcall(chilliSetProperty, objects.obj14, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj14, "Selectable", true)
+pcall(chilliSetProperty, objects.obj14, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj14, "Size", UDim2.new(0.06637302041053772,0,0.6588137149810791,0))
+pcall(chilliSetProperty, objects.obj14, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj14, "ZIndex", 99)
+pcall(chilliSetProperty, objects.obj14, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj14, "LayoutOrder", 1)
+pcall(chilliSetProperty, objects.obj14, "Text", "")
+pcall(chilliSetProperty, objects.obj14, "TextColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj14, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj14, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj14, "TextScaled", false)
+pcall(chilliSetProperty, objects.obj14, "TextWrapped", false)
+pcall(chilliSetProperty, objects.obj14, "TextXAlignment", Enum.TextXAlignment.Center)
+pcall(chilliSetProperty, objects.obj14, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj14, "Font", Enum.Font.SourceSans)
+pcall(chilliSetProperty, objects.obj14, "RichText", false)
+pcall(chilliSetProperty, objects.obj14, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj14, "AutoButtonColor", true)
+pcall(chilliSetProperty, objects.obj14, "Modal", false)
+objects.obj14.Parent = objects.obj4
+​objects.obj15 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj15, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj15, "Archivable", true)
+pcall(chilliSetProperty, objects.obj15, "AspectRatio", 1)
+pcall(chilliSetProperty, objects.obj15, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj15, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj15.Parent = objects.obj14
+​objects.obj16 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj16, "Name", "Main")
+pcall(chilliSetProperty, objects.obj16, "Archivable", true)
+pcall(chilliSetProperty, objects.obj16, "Visible", true)
+pcall(chilliSetProperty, objects.obj16, "Active", false)
+pcall(chilliSetProperty, objects.obj16, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj16, "BackgroundColor3", Color3.fromRGB(200,80,0))
+pcall(chilliSetProperty, objects.obj16, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj16, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj16, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj16, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj16, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj16, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj16, "Selectable", false)
+pcall(chilliSetProperty, objects.obj16, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj16, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj16, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj16, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj16, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj16, "LayoutOrder", 0)
+objects.obj16.Parent = objects.obj14
+​objects.obj17 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj17, "Name", "Color")
+pcall(chilliSetProperty, objects.obj17, "Archivable", true)
+pcall(chilliSetProperty, objects.obj17, "Visible", true)
+pcall(chilliSetProperty, objects.obj17, "Active", false)
+pcall(chilliSetProperty, objects.obj17, "AnchorPoint", Vector2.new(0.5,0))
+pcall(chilliSetProperty, objects.obj17, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj17, "BackgroundTransparency", 0)
+pcall(chilliSetProperty, objects.obj17, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj17, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj17, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj17, "Position", UDim2.new(0.5,0,0,0))
+pcall(chilliSetProperty, objects.obj17, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj17, "Selectable", false)
+pcall(chilliSetProperty, objects.obj17, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj17, "Size", UDim2.new(1,0,0.8999999761581421,0))
+pcall(chilliSetProperty, objects.obj17, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj17, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj17, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj17, "LayoutOrder", 0)
+objects.obj17.Parent = objects.obj16
+​objects.obj18 = Instance.new("Frame")
+pcall(chilliSetProperty, objects.obj18, "Name", "Transparent")
+pcall(chilliSetProperty, objects.obj18, "Archivable", true)
+pcall(chilliSetProperty, objects.obj18, "Visible", true)
+pcall(chilliSetProperty, objects.obj18, "Active", false)
+pcall(chilliSetProperty, objects.obj18, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj18, "BackgroundColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BackgroundTransparency", 0.8999999761581421)
+pcall(chilliSetProperty, objects.obj18, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj18, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj18, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj18, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj18, "Selectable", false)
+pcall(chilliSetProperty, objects.obj18, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj18, "Size", UDim2.new(0.9599999785423279,0,0.8799999952316284,0))
+pcall(chilliSetProperty, objects.obj18, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj18, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj18, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj18, "LayoutOrder", 0)
+objects.obj18.Parent = objects.obj17
+​objects.obj19 = Instance.new("ImageLabel")
+pcall(chilliSetProperty, objects.obj19, "Name", "Pattern")
+pcall(chilliSetProperty, objects.obj19, "Archivable", true)
+pcall(chilliSetProperty, objects.obj19, "Visible", true)
+pcall(chilliSetProperty, objects.obj19, "Active", false)
+pcall(chilliSetProperty, objects.obj19, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj19, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj19, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj19, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj19, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj19, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj19, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj19, "Selectable", false)
+pcall(chilliSetProperty, objects.obj19, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj19, "Size", UDim2.new(1,0,1,0))
+pcall(chilliSetProperty, objects.obj19, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj19, "ZIndex", 1)
+pcall(chilliSetProperty, objects.obj19, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj19, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj19, "Image", "")
+pcall(chilliSetProperty, objects.obj19, "ImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "ImageTransparency", 0.5)
+pcall(chilliSetProperty, objects.obj19, "ScaleType", Enum.ScaleType.Tile)
+pcall(chilliSetProperty, objects.obj19, "SliceCenter", Rect.new(0,0,0,0))
+pcall(chilliSetProperty, objects.obj19, "SliceScale", 1)
+pcall(chilliSetProperty, objects.obj19, "TileSize", UDim2.new(2,0,2,0))
+pcall(chilliSetProperty, objects.obj19, "ResampleMode", Enum.ResamplerMode.Default)
+objects.obj19.Parent = objects.obj18
+​objects.obj20 = Instance.new("TextLabel")
+pcall(chilliSetProperty, objects.obj20, "Name", "Label")
+pcall(chilliSetProperty, objects.obj20, "Archivable", true)
+pcall(chilliSetProperty, objects.obj20, "Visible", true)
+pcall(chilliSetProperty, objects.obj20, "Active", false)
+pcall(chilliSetProperty, objects.obj20, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj20, "BackgroundColor3", Color3.fromRGB(239,220,203))
+pcall(chilliSetProperty, objects.obj20, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj20, "BorderColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj20, "ClipsDescendants", false)
+pcall(chilliSetProperty, objects.obj20, "Position", UDim2.new(0.5,0,0.5,0))
+pcall(chilliSetProperty, objects.obj20, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj20, "Selectable", false)
+pcall(chilliSetProperty, objects.obj20, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj20, "Size", UDim2.new(0.949999988079071,0,0.800000011920929,0))
+pcall(chilliSetProperty, objects.obj20, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj20, "ZIndex", 6)
+pcall(chilliSetProperty, objects.obj20, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj20, "LayoutOrder", 0)
+pcall(chilliSetProperty, objects.obj20, "Text", "X")
+pcall(chilliSetProperty, objects.obj20, "TextColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj20, "TextTransparency", 0)
+pcall(chilliSetProperty, objects.obj20, "TextStrokeColor3", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "TextStrokeTransparency", 1)
+pcall(chilliSetProperty, objects.obj20, "TextSize", 14)
+pcall(chilliSetProperty, objects.obj20, "TextScaled", true)
+pcall(chilliSetProperty, objects.obj20, "TextWrapped", true)
+pcall(chilliSetProperty, objects.obj20, "TextXAlignment", Enum.TextXAlignment.Center)
+pcall(chilliSetProperty, objects.obj20, "TextYAlignment", Enum.TextYAlignment.Center)
+pcall(chilliSetProperty, objects.obj20, "Font", Enum.Font.FredokaOne)
+pcall(chilliSetProperty, objects.obj20, "RichText", false)
+pcall(chilliSetProperty, objects.obj20, "LineHeight", 1)
+pcall(chilliSetProperty, objects.obj20, "MaxVisibleGraphemes", -1)
+objects.obj20.Parent = objects.obj17
+​objects.obj21 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj21, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj21, "Archivable", true)
+pcall(chilliSetProperty, objects.obj21, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
+pcall(chilliSetProperty, objects.obj21, "Color", Color3.fromRGB(0,0,0))
+pcall(chilliSetProperty, objects.obj21, "Enabled", true)
+pcall(chilliSetProperty, objects.obj21, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj21, "Thickness", 0.10999999940395355)
+pcall(chilliSetProperty, objects.obj21, "Transparency", 0)
+objects.obj21.Parent = objects.obj20
+​objects.obj22 = Instance.new("UIGradient")
+pcall(chilliSetProperty, objects.obj22, "Name", "UIGradient")
+pcall(chilliSetProperty, objects.obj22, "Archivable", true)
+pcall(chilliSetProperty, objects.obj22, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,165,0)),ColorSequenceKeypoint.new(1,Color3.fromRGB(255,100,0))}))
+pcall(chilliSetProperty, objects.obj22, "Enabled", true)
+pcall(chilliSetProperty, objects.obj22, "Offset", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj22, "Rotation", 90)
+pcall(chilliSetProperty, objects.obj22, "Transparency", NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}))
+objects.obj22.Parent = objects.obj17
+​objects.obj23 = Instance.new("UIStroke")
+pcall(chilliSetProperty, objects.obj23, "Name", "UIStroke")
+pcall(chilliSetProperty, objects.obj23, "Archivable", true)
+pcall(chilliSetProperty, objects.obj23, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
+pcall(chilliSetProperty, objects.obj23, "Color", Color3.fromRGB(100,40,0))
+pcall(chilliSetProperty, objects.obj23, "Enabled", true)
+pcall(chilliSetProperty, objects.obj23, "LineJoinMode", Enum.LineJoinMode.Round)
+pcall(chilliSetProperty, objects.obj23, "Thickness", 0.09000000357627869)
+pcall(chilliSetProperty, objects.obj23, "Transparency", 0)
+objects.obj23.Parent = objects.obj16
+​objects.obj24 = Instance.new("UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj24, "Name", "UIAspectRatioConstraint")
+pcall(chilliSetProperty, objects.obj24, "Archivable", true)
+pcall(chilliSetProperty, objects.obj24, "AspectRatio", 1.340000033378601)
+pcall(chilliSetProperty, objects.obj24, "AspectType", Enum.AspectType.FitWithinMaxSize)
+pcall(chilliSetProperty, objects.obj24, "DominantAxis", Enum.DominantAxis.Width)
+objects.obj24.Parent = objects.obj2
+​objects.obj25 = Instance.new("ScrollingFrame")
+pcall(chilliSetProperty, objects.obj25, "Name", "List")
+pcall(chilliSetProperty, objects.obj25, "Archivable", true)
+pcall(chilliSetProperty, objects.obj25, "Visible", true)
+pcall(chilliSetProperty, objects.obj25, "Active", true)
+pcall(chilliSetProperty, objects.obj25, "AnchorPoint", Vector2.new(0.5,0.5))
+pcall(chilliSetProperty, objects.obj25, "BackgroundColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj25, "BackgroundTransparency", 1)
+pcall(chilliSetProperty, objects.obj25, "BorderColor3", Color3.fromRGB(27,42,53))
+pcall(chilliSetProperty, objects.obj25, "BorderSizePixel", 0)
+pcall(chilliSetProperty, objects.obj25, "ClipsDescendants", true)
+pcall(chilliSetProperty, objects.obj25, "Position", UDim2.new(0.5000000596046448,0,0.5701961517333984,0))
+pcall(chilliSetProperty, objects.obj25, "Rotation", 0)
+pcall(chilliSetProperty, objects.obj25, "Selectable", true)
+pcall(chilliSetProperty, objects.obj25, "SelectionOrder", 0)
+pcall(chilliSetProperty, objects.obj25, "Size", UDim2.new(0.9900000095367432,0,0.8296076059341431,0))
+pcall(chilliSetProperty, objects.obj25, "SizeConstraint", Enum.SizeConstraint.RelativeXY)
+pcall(chilliSetProperty, objects.obj25, "ZIndex", 5)
+pcall(chilliSetProperty, objects.obj25, "AutomaticSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj25, "LayoutOrder", 1)
+pcall(chilliSetProperty, objects.obj25, "CanvasPosition", Vector2.new(0,0))
+pcall(chilliSetProperty, objects.obj25, "CanvasSize", UDim2.new(0,0,0,642))
+pcall(chilliSetProperty, objects.obj25, "AutomaticCanvasSize", Enum.AutomaticSize.None)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarThickness", 6)
+pcall(chilliSetProperty, objects.obj25, "ScrollBarImageColor3", Color3.fromRGB(255,255,255))
+pcall(chilliSetProperty, objects.obj25, "ScrollBarImageTransparency", 0)
+pcall(chilliSetProperty, objects.obj25, "ScrollingDirection", Enum.ScrollingDirection.XY)
+pcall(chilliSetProperty, objects.obj25, "ScrollingEnabled", true)
+pcall(chilliSetProperty, objects.obj25, "VerticalScrollBarInset", Enum.ScrollBarInset.None)
+pcall(chilliSetProperty, objects.obj25, "HorizontalScrollBarInset", Enum.ScrollBarInset.None)
+objects.obj25.Parent = objects.obj2
+​local rootGui = objects.obj1
+local mainFrame = objects.obj2
+local topBar = objects.obj4
+local closeButton = objects.obj14
+​local Runtime = {}
+local Protected = {}
+​local rootConnections = {}
+​local function trackRootConnection(connection)
+table.insert(rootConnections, connection)
+return connection
+end
+​local function disconnectRootConnections()
+for index = #rootConnections, 1, -1 do
+local connection = rootConnections[index]
+if connection and connection.Connected then
+connection:Disconnect()
+end
+rootConnections[index] = nil
+end
+end
+​rootGui.ResetOnSpawn = false
+​rootGui.IgnoreGuiInset = true
+rootGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+​do
+local managedNames = {
+ChilliAutoGetTargetPanel = true,
+ChilliAutoGetBarGui = true,
+ChilliFpsPingGui = true,
+}
+local boundTargets = setmetatable({}, { __mode = "k" })
+​local function bindTarget(screen, target)
+if boundTargets[target] or not target:IsA("GuiObject") then
+return
+end
+boundTargets[target] = true
+local applying = false
+​local function applyBounds()
+if applying or not target.Parent or not screen.Parent then
+return
+end
+local region = screen.AbsoluteSize
+if region.X <= 0 or region.Y <= 0 then
+return
+end
+local position = target.Position
+local x = position.X.Scale + position.X.Offset / region.X
+local y = position.Y.Scale + position.Y.Offset / region.Y
+local width = math.max(target.AbsoluteSize.X / region.X, 0)
+local height = math.max(target.AbsoluteSize.Y / region.Y, 0)
+local anchor = target.AnchorPoint
+local minX = width * anchor.X
+local maxX = 0.998 - width * (1 - anchor.X)
+local minY = height * anchor.Y
+​local maxY = 0.98 + height * anchor.Y
+local nextX = math.clamp(x, math.min(minX, maxX), math.max(minX, maxX))
+local nextY = math.clamp(y, math.min(minY, maxY), math.max(minY, maxY))
+if math.abs(nextX - x) > 0.00001
+or math.abs(nextY - y) > 0.00001
+then
+applying = true
+target.Position = UDim2.fromScale(nextX, nextY)
+applying = false
+end
+end
+​trackRootConnection(target:GetPropertyChangedSignal("Position"):Connect(
+applyBounds
+))
+trackRootConnection(target:GetPropertyChangedSignal("AbsoluteSize"):Connect(
+applyBounds
+))
+task.defer(applyBounds)
+end
+​local function bindScreen(screen)
+if not screen:IsA("ScreenGui") or not managedNames[screen.Name] then
+return
+end
+screen.IgnoreGuiInset = true
+local function consider(child)
+if child:IsA("Frame") then
+bindTarget(screen, child)
+end
+end
+trackRootConnection(screen.ChildAdded:Connect(consider))
+for _, child in ipairs(screen:GetChildren()) do
+consider(child)
+end
+end
+​trackRootConnection(parent.ChildAdded:Connect(bindScreen))
+for _, child in ipairs(parent:GetChildren()) do
+bindScreen(child)
+end
+end
+​local function findLeftCenterSources()
+local screen = playerGui:FindFirstChild("LeftCenter")
+local frame = screen and screen:FindFirstChild("LeftCenter")
+local buttons = frame and frame:FindFirstChild("Buttons")
+local shop = buttons and buttons:FindFirstChild("Shop")
+local icon = shop and shop:FindFirstChild("Icon")
+local text = shop and shop:FindFirstChild("Txt")
+if not (screen and frame and buttons and shop and icon and text) then
+return nil
+end
+​return screen, frame, buttons, shop, icon, text
+end
+​local sourceLeftCenterScreen
+local sourceLeftCenter
+local sourceButtons
+local sourceShop
+local sourceShopIcon
+local sourceShopText
+sourceLeftCenterScreen, sourceLeftCenter, sourceButtons,
+sourceShop, sourceShopIcon, sourceShopText = findLeftCenterSources()
+​local leftCenterFrame = sourceLeftCenter
+local hudRestorePosition = leftCenterFrame
+and sourceLeftCenter.Position
+or UDim2.fromScale(0, 0.5)
+local hudTween = nil
+local hudTweenConnection = nil
+local hudAnimationSerial = 0
+Runtime.chilliIsOpen = false
+​local function cancelHudTween()
+if hudTweenConnection then
+hudTweenConnection:Disconnect()
+hudTweenConnection = nil
+end
+if hudTween then
+hudTween:Cancel()
+hudTween = nil
+end
+end
+​local launcherGui = Instance.new("ScreenGui")
+launcherGui.Name = LAUNCHER_GUI_NAME
+launcherGui.ResetOnSpawn = false
+launcherGui.IgnoreGuiInset = sourceLeftCenterScreen
+and sourceLeftCenterScreen.IgnoreGuiInset
+or false
+launcherGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+launcherGui.DisplayOrder = sourceLeftCenterScreen
+and sourceLeftCenterScreen.DisplayOrder
+or 0
+launcherGui:SetAttribute(OWNER_ATTRIBUTE, true)
+if sourceLeftCenterScreen then
+pcall(function()
+launcherGui.ScreenInsets = sourceLeftCenterScreen.ScreenInsets
+launcherGui.SafeAreaCompatibility = sourceLeftCenterScreen.SafeAreaCompatibility
+launcherGui.ClipToDeviceSafeArea = sourceLeftCenterScreen.ClipToDeviceSafeArea
+end)
+end
+local gameId = game.GameId
+if gameId ~= 7709344486 then
+launcherGui.Enabled = false
+end
+launcherGui.Parent = parent
+​local launcherRoot = Instance.new("Frame")
+launcherRoot.Name = "LeftCenter"
+launcherRoot.AnchorPoint = sourceLeftCenter
+and sourceLeftCenter.AnchorPoint
+or Vector2.new(0, 0.5)
+launcherRoot.Position = sourceLeftCenter
+and sourceLeftCenter.Position
+or UDim2.fromScale(0, 0.5)
+launcherRoot.Size = sourceLeftCenter
+and sourceLeftCenter.Size
+or UDim2.fromScale(1, 1)
+launcherRoot.BackgroundTransparency = 1
+launcherRoot.BorderSizePixel = 0
+launcherRoot.Parent = launcherGui
+​local sourceRootAspect = sourceLeftCenter
+and sourceLeftCenter:FindFirstChildOfClass("UIAspectRatioConstraint")
+local launcherRootAspect = Instance.new("UIAspectRatioConstraint")
+launcherRootAspect.AspectRatio = sourceRootAspect and sourceRootAspect.AspectRatio or 2.15
+launcherRootAspect.AspectType = sourceRootAspect and sourceRootAspect.AspectType or Enum.AspectType.FitWithinMaxSize
+launcherRootAspect.DominantAxis = sourceRootAspect and sourceRootAspect.DominantAxis or Enum.DominantAxis.Width
+launcherRootAspect.Parent = launcherRoot
+​local launcherButtons = Instance.new("Frame")
+launcherButtons.Name = "Buttons"
+launcherButtons.AnchorPoint = sourceButtons
+and sourceButtons.AnchorPoint
+or Vector2.new(0, 0.5)
+launcherButtons.Position = sourceButtons
+and sourceButtons.Position
+or UDim2.fromScale(0.015625, 0.5)
+launcherButtons.Size = sourceButtons
+and sourceButtons.Size
+or UDim2.fromScale(0.062, 0.38)
+launcherButtons.BackgroundTransparency = 1
+launcherButtons.BorderSizePixel = 0
+launcherButtons.Parent = launcherRoot
+​local sourceButtonsAspect = sourceButtons
+and sourceButtons:FindFirstChildOfClass("UIAspectRatioConstraint")
+local launcherButtonsAspect = Instance.new("UIAspectRatioConstraint")
+launcherButtonsAspect.AspectRatio = sourceButtonsAspect and sourceButtonsAspect.AspectRatio or 0.3
+launcherButtonsAspect.AspectType = sourceButtonsAspect and sourceButtonsAspect.AspectType or Enum.AspectType.FitWithinMaxSize
+launcherButtonsAspect.DominantAxis = sourceButtonsAspect and sourceButtonsAspect.DominantAxis or Enum.DominantAxis.Width
+launcherButtonsAspect.Parent = launcherButtons
+​local chilliButton = Instance.new("ImageButton")
+chilliButton.Name = "Chilli"
+chilliButton.AnchorPoint = Vector2.new(0.5, 0.5)
+chilliButton.Position = sourceShop
+and UDim2.fromScale(0.5, 0)
+or UDim2.fromScale(0.42, -0.1885267)
+chilliButton.Size = sourceShop
+and UDim2.fromScale(1, 0.3)
+or UDim2.fromScale(1, 0.3015267)
+chilliButton.BackgroundColor3 = sourceShop
+and sourceShop.BackgroundColor3
+or Color3.fromRGB(255, 255, 255)
+chilliButton.BackgroundTransparency = sourceShop
+and sourceShop.BackgroundTransparency
+or 1
+chilliButton.BorderSizePixel = 0
+chilliButton.AutoButtonColor = sourceShop == nil or sourceShop.AutoButtonColor
+chilliButton.Image = sourceShop
+and sourceShop.Image
+or "rbxassetid://88734015663903"
+chilliButton.HoverImage = sourceShop
+and sourceShop.HoverImage
+or "rbxassetid://119376130178381"
+chilliButton.PressedImage = sourceShop and sourceShop.PressedImage or ""
+chilliButton.ImageColor3 = sourceShop
+and sourceShop.ImageColor3
+or Color3.fromRGB(255, 255, 255)
+chilliButton.ImageTransparency = sourceShop
+and sourceShop.ImageTransparency
+or 0
+chilliButton.ImageRectOffset = sourceShop
+and sourceShop.ImageRectOffset
+or Vector2.new()
+chilliButton.ImageRectSize = sourceShop
+and sourceShop.ImageRectSize
+or Vector2.new()
+chilliButton.ResampleMode = sourceShop
+and sourceShop.ResampleMode
+or Enum.ResamplerMode.Default
+chilliButton.ScaleType = sourceShop
+and sourceShop.ScaleType
+or Enum.ScaleType.Fit
+chilliButton.SliceCenter = sourceShop
+and sourceShop.SliceCenter
+or Rect.new()
+chilliButton.SliceScale = sourceShop and sourceShop.SliceScale or 1
+chilliButton.ZIndex = sourceShop and sourceShop.ZIndex or 2
+chilliButton.Parent = launcherButtons
+​local fallbackButtonGradient = Instance.new("UIGradient")
+fallbackButtonGradient.Color = ColorSequence.new({
+ColorSequenceKeypoint.new(0, Color3.fromRGB(111, 145, 161)),
+ColorSequenceKeypoint.new(1, Color3.fromRGB(52, 72, 84)),
+})
+fallbackButtonGradient.Rotation = 90
+fallbackButtonGradient.Enabled = false
+fallbackButtonGradient.Parent = chilliButton
+​local fallbackButtonStroke = Instance.new("UIStroke")
+fallbackButtonStroke.Color = Color3.fromRGB(34, 45, 52)
+fallbackButtonStroke.Thickness = 0.025
+fallbackButtonStroke.Enabled = false
+pcall(function()
+fallbackButtonStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+end)
+fallbackButtonStroke.Parent = chilliButton
+​local chilliViewport = Instance.new("ViewportFrame")
+chilliViewport.Name = "ChilliViewport"
+chilliViewport.AnchorPoint = sourceShopIcon and sourceShopIcon.AnchorPoint
+or Vector2.new(0.5, 0.5)
+chilliViewport.Position = sourceShopIcon and sourceShopIcon.Position
+or UDim2.fromScale(0.5, 0.5)
+chilliViewport.Size = sourceShopIcon and sourceShopIcon.Size
+or UDim2.fromScale(0.76055, 0.76055)
+chilliViewport.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+chilliViewport.BackgroundTransparency = 1
+chilliViewport.BorderSizePixel = 0
+chilliViewport.Ambient = Color3.fromRGB(255, 255, 255)
+chilliViewport.LightColor = Color3.fromRGB(255, 255, 255)
+chilliViewport.LightDirection = Vector3.new(-1, -1, -1)
+chilliViewport.ImageColor3 = Color3.fromRGB(255, 255, 255)
+chilliViewport.ImageTransparency = 0
+chilliViewport.LayoutOrder = 0
+chilliViewport.ZIndex = sourceShopIcon and sourceShopIcon.ZIndex or 0
+chilliViewport.Visible = true
+chilliViewport.Active = false
+pcall(function()
+chilliViewport.Interactable = false
+end)
+chilliViewport.Parent = chilliButton
+​local chilliWorldModel = Instance.new("WorldModel")
+chilliWorldModel.Name = "WorldModel"
+chilliWorldModel.Parent = chilliViewport
+​local chilliSpider = createEmbeddedSpider()
+chilliSpider.Parent = chilliWorldModel
+chilliSpider.CFrame = CFrame.Angles(
+math.rad(82.5),
+math.rad(-153.95),
+math.rad(0)
+)
+​local chilliViewportCamera = Instance.new("Camera")
+chilliViewportCamera.Name = "Camera"
+chilliViewportCamera.CameraType = Enum.CameraType.Fixed
+chilliViewportCamera.FieldOfView = 50
+chilliViewportCamera.FieldOfViewMode = Enum.FieldOfViewMode.Vertical
+chilliViewportCamera.Parent = chilliViewport
+chilliViewport.CurrentCamera = chilliViewportCamera
+​local function frameChilliSpider()
+local boxCFrame = chilliSpider.CFrame
+local right = boxCFrame.RightVector
+local up = boxCFrame.UpVector
+local look = boxCFrame.LookVector
+local size = chilliSpider.Size
+local boxSize = Vector3.new(
+math.abs(right.X) * size.X
++ math.abs(up.X) * size.Y
++ math.abs(look.X) * size.Z,
+math.abs(right.Y) * size.X
++ math.abs(up.Y) * size.Y
++ math.abs(look.Y) * size.Z,
+math.abs(right.Z) * size.X
++ math.abs(up.Z) * size.Y
++ math.abs(look.Z) * size.Z
+)
+​local verticalFieldOfView = math.rad(chilliViewportCamera.FieldOfView)
+local viewportSize = chilliViewport.AbsoluteSize
+local aspectRatio = 1
+if viewportSize.X > 0 and viewportSize.Y > 0 then
+aspectRatio = viewportSize.X / viewportSize.Y
+end
+local horizontalFieldOfView = 2 * math.atan(
+math.tan(verticalFieldOfView * 0.5) * aspectRatio
+)
+local verticalDistance = boxSize.Y
+/ (2 * math.tan(verticalFieldOfView * 0.5))
+local horizontalDistance = boxSize.X
+/ (2 * math.tan(horizontalFieldOfView * 0.5))
+local distance = math.max(verticalDistance, horizontalDistance)
++ boxSize.Z * 0.5
+distance = distance * 3
+​local target = boxCFrame.Position
+local cameraPosition = target + Vector3.new(0, boxSize.Y * 0.04, distance)
+chilliViewportCamera.CFrame = CFrame.lookAt(cameraPosition, target)
+chilliViewportCamera.Focus = CFrame.new(target)
+end
+​frameChilliSpider()
+task.defer(function()
+RunService.RenderStepped:Wait()
+frameChilliSpider()
+end)
+​local chilliText = Instance.new("TextLabel")
+chilliText.Name = "Txt"
+chilliText.AnchorPoint = sourceShopText and sourceShopText.AnchorPoint or Vector2.new(0.5, 0.5)
+chilliText.Position = sourceShopText and sourceShopText.Position or UDim2.fromScale(0.5, 0.9367089)
+chilliText.Size = sourceShopText and sourceShopText.Size or UDim2.fromScale(1, 0.2278481)
+chilliText.BackgroundTransparency = 1
+chilliText.BorderSizePixel = 0
+chilliText.FontFace = sourceShopText and sourceShopText.FontFace or Font.new(
+"rbxasset://fonts/families/GothamSSm.json",
+Enum.FontWeight.ExtraBold
+)
+chilliText.Text = "Morty Hub"
+chilliText.TextColor3 = sourceShopText and sourceShopText.TextColor3 or Color3.fromRGB(255, 255, 255)
+chilliText.TextTransparency = sourceShopText and sourceShopText.TextTransparency or 0
+chilliText.TextScaled = sourceShopText == nil or sourceShopText.TextScaled
+chilliText.TextWrapped = sourceShopText == nil or sourceShopText.TextWrapped
+chilliText.TextXAlignment = sourceShopText and sourceShopText.TextXAlignment or Enum.TextXAlignment.Center
+chilliText.TextYAlignment = sourceShopText and sourceShopText.TextYAlignment or Enum.TextYAlignment.Center
+chilliText.ZIndex = sourceShopText and sourceShopText.ZIndex or 1
+chilliText.Parent = chilliButton
+​local sourceTextStroke = sourceShopText and sourceShopText:FindFirstChildOfClass("UIStroke")
+local chilliTextStroke = Instance.new("UIStroke")
+chilliTextStroke.ApplyStrokeMode = sourceTextStroke and sourceTextStroke.ApplyStrokeMode or Enum.ApplyStrokeMode.Contextual
+chilliTextStroke.Color = sourceTextStroke and sourceTextStroke.Color or Color3.fromRGB(0, 0, 0)
+chilliTextStroke.LineJoinMode = sourceTextStroke and sourceTextStroke.LineJoinMode or Enum.LineJoinMode.Round
+chilliTextStroke.Thickness = sourceTextStroke and sourceTextStroke.Thickness or 2
+chilliTextStroke.Transparency = sourceTextStroke and sourceTextStroke.Transparency or 0.35
+if sourceTextStroke then
+local originalThickness = sourceTextStroke:GetAttribute("OriginalThickness")
+if originalThickness ~= nil then
+chilliTextStroke:SetAttribute("OriginalThickness", originalThickness)
+end
+end
+chilliTextStroke.Parent = chilliText
+​local function getLiveVerticalStep()
+if not (sourceButtons and sourceButtons.Parent and sourceShop and sourceShop.Parent) then
+return nil
+end
+​local shopPosition = sourceShop.AbsolutePosition
+local shopSize = sourceShop.AbsoluteSize
+local bestStep = nil
+​for _, child in ipairs(sourceButtons:GetChildren()) do
+if child ~= sourceShop and child:IsA("GuiButton") and child.Visible then
+local deltaX = math.abs(child.AbsolutePosition.X - shopPosition.X)
+local deltaY = child.AbsolutePosition.Y - shopPosition.Y
+if deltaX <= shopSize.X * 0.25 and deltaY > 0 then
+if not bestStep or deltaY < bestStep then
+bestStep = deltaY
+end
+end
+end
+end
+​if bestStep then
+return bestStep
+end
+​local grid = sourceButtons:FindFirstChildOfClass("UIGridLayout")
+if grid then
+return grid.AbsoluteCellSize.Y
++ grid.CellPadding.Y.Scale * sourceButtons.AbsoluteSize.Y
++ grid.CellPadding.Y.Offset
+end
+​return shopSize.Y
+end
+​local function updateChilliLauncherLayout()
+if not (sourceButtons and sourceButtons.Parent and sourceShop and sourceShop.Parent) then
+return
+end
+​local buttonsSize = sourceButtons.AbsoluteSize
+local shopSize = sourceShop.AbsoluteSize
+if buttonsSize.X <= 0 or buttonsSize.Y <= 0 or shopSize.X <= 0 or shopSize.Y <= 0 then
+return
+end
+​local buttonsPosition = sourceButtons.AbsolutePosition
+local shopPosition = sourceShop.AbsolutePosition
+local verticalStep = getLiveVerticalStep()
+if not verticalStep then
+return
+end
+local centerX = shopPosition.X + shopSize.X * 0.5
+local centerY = shopPosition.Y - verticalStep + shopSize.Y * 0.5
+​chilliButton.Position = UDim2.fromScale(
+(centerX - buttonsPosition.X) / buttonsSize.X,
+(centerY - buttonsPosition.Y) / buttonsSize.Y
+)
+chilliButton.Size = UDim2.fromScale(
+shopSize.X / buttonsSize.X,
+shopSize.Y / buttonsSize.Y
+)
+end
+​local launcherLayoutQueued = false
+local function queueChilliLauncherLayout()
+if hudTween or launcherLayoutQueued then
+return
+end
+launcherLayoutQueued = true
+task.defer(function()
+RunService.RenderStepped:Wait()
+launcherLayoutQueued = false
+if launcherGui.Parent then
+updateChilliLauncherLayout()
+end
+end)
+end
+​local sourceConnections = {}
+local sourceBound = false
+​local function disconnectSourceConnections()
+for _, connection in ipairs(sourceConnections) do
+connection:Disconnect()
+end
+table.clear(sourceConnections)
+sourceBound = false
+end
+​local function connectSource(signal, callback)
+local connection = signal:Connect(callback)
+table.insert(sourceConnections, connection)
+end
+​local function shiftOneScreenLeft(position)
+return UDim2.new(
+position.X.Scale - 1,
+position.X.Offset,
+position.Y.Scale,
+position.Y.Offset
+)
+end
+​local function refreshEffectiveLeftCenterHidden()
+local unavailable = not sourceLeftCenterScreen
+or not sourceLeftCenterScreen.Parent
+or not sourceLeftCenterScreen.Enabled
+or not leftCenterFrame
+or not leftCenterFrame.Parent
+or not leftCenterFrame.Visible
+local shiftedLeft = false
+if leftCenterFrame and leftCenterFrame.Parent then
+local currentX = leftCenterFrame.Position.X
+local restoreX = hudRestorePosition.X
+shiftedLeft = currentX.Scale < restoreX.Scale - 0.05
+or (
+math.abs(currentX.Scale - restoreX.Scale) <= 0.05
+and currentX.Offset < restoreX.Offset - 4
+)
+end
+local effectiveHidden =
+launcherGui:GetAttribute("QuickHudHidden") == true
+or Runtime.chilliIsOpen
+or unavailable
+or shiftedLeft
+if launcherGui:GetAttribute("EffectiveLeftCenterHidden")
+~= effectiveHidden
+then
+launcherGui:SetAttribute(
+"EffectiveLeftCenterHidden",
+effectiveHidden
+)
+end
+end
+​local function adoptLeftCenterSources(screen, frame, buttons, shop, icon, text)
+if sourceBound
+or not (screen and frame and buttons and shop and icon and text)
+then
+return false
+end
+​sourceBound = true
+​sourceLeftCenterScreen = screen
+sourceLeftCenter = frame
+sourceButtons = buttons
+sourceShop = shop
+sourceShopIcon = icon
+sourceShopText = text
+sourceTextStroke = sourceShopText:FindFirstChildOfClass("UIStroke")
+​launcherGui.IgnoreGuiInset = sourceLeftCenterScreen.IgnoreGuiInset
+launcherGui.DisplayOrder = sourceLeftCenterScreen.DisplayOrder
+pcall(function()
+launcherGui.ScreenInsets = sourceLeftCenterScreen.ScreenInsets
+launcherGui.SafeAreaCompatibility = sourceLeftCenterScreen.SafeAreaCompatibility
+launcherGui.ClipToDeviceSafeArea = sourceLeftCenterScreen.ClipToDeviceSafeArea
+end)
+​launcherRoot.AnchorPoint = sourceLeftCenter.AnchorPoint
+launcherRoot.Size = sourceLeftCenter.Size
+sourceRootAspect = sourceLeftCenter:FindFirstChildOfClass("UIAspectRatioConstraint")
+if sourceRootAspect then
+launcherRootAspect.AspectRatio = sourceRootAspect.AspectRatio
+launcherRootAspect.AspectType = sourceRootAspect.AspectType
+launcherRootAspect.DominantAxis = sourceRootAspect.DominantAxis
+end
+​launcherButtons.AnchorPoint = sourceButtons.AnchorPoint
+launcherButtons.Position = sourceButtons.Position
+launcherButtons.Size = sourceButtons.Size
+sourceButtonsAspect = sourceButtons:FindFirstChildOfClass("UIAspectRatioConstraint")
+if sourceButtonsAspect then
+launcherButtonsAspect.AspectRatio = sourceButtonsAspect.AspectRatio
+launcherButtonsAspect.AspectType = sourceButtonsAspect.AspectType
+launcherButtonsAspect.DominantAxis = sourceButtonsAspect.DominantAxis
+end
+​chilliButton.BackgroundColor3 = sourceShop.BackgroundColor3
+chilliButton.BackgroundTransparency = sourceShop.BackgroundTransparency
+chilliButton.AutoButtonColor = sourceShop.AutoButtonColor
+chilliButton.Image = sourceShop.Image
+chilliButton.HoverImage = sourceShop.HoverImage
+chilliButton.PressedImage = sourceShop.PressedImage
+chilliButton.ImageColor3 = sourceShop.ImageColor3
+chilliButton.ImageTransparency = sourceShop.ImageTransparency
+chilliButton.ImageRectOffset = sourceShop.ImageRectOffset
+chilliButton.ImageRectSize = sourceShop.ImageRectSize
+chilliButton.ResampleMode = sourceShop.ResampleMode
+chilliButton.ScaleType = sourceShop.ScaleType
+chilliButton.SliceCenter = sourceShop.SliceCenter
+chilliButton.SliceScale = sourceShop.SliceScale
+chilliButton.ZIndex = sourceShop.ZIndex
+fallbackButtonGradient.Enabled = false
+fallbackButtonStroke.Enabled = false
+​chilliViewport.AnchorPoint = sourceShopIcon.AnchorPoint
+chilliViewport.Position = sourceShopIcon.Position
+chilliViewport.Size = sourceShopIcon.Size
+chilliViewport.ZIndex = sourceShopIcon.ZIndex
+​chilliText.AnchorPoint = sourceShopText.AnchorPoint
+chilliText.Position = sourceShopText.Position
+chilliText.Size = sourceShopText.Size
+chilliText.FontFace = sourceShopText.FontFace
+chilliText.TextColor3 = sourceShopText.TextColor3
+chilliText.TextTransparency = sourceShopText.TextTransparency
+chilliText.TextScaled = sourceShopText.TextScaled
+chilliText.TextWrapped = sourceShopText.TextWrapped
+chilliText.TextXAlignment = sourceShopText.TextXAlignment
+chilliText.TextYAlignment = sourceShopText.TextYAlignment
+chilliText.ZIndex = sourceShopText.ZIndex
+​if sourceTextStroke then
+local boundStroke = sourceTextStroke
+chilliTextStroke.ApplyStrokeMode = boundStroke.ApplyStrokeMode
+chilliTextStroke.Color = boundStroke.Color
+chilliTextStroke.LineJoinMode = boundStroke.LineJoinMode
+chilliTextStroke.Thickness = boundStroke.Thickness
+chilliTextStroke.Transparency = boundStroke.Transparency
+connectSource(
+boundStroke:GetPropertyChangedSignal("Thickness"),
+function()
+chilliTextStroke.Thickness = boundStroke.Thickness
+end
+)
+connectSource(
+boundStroke:GetPropertyChangedSignal("Transparency"),
+function()
+chilliTextStroke.Transparency = boundStroke.Transparency
+end
+)
+end
+​leftCenterFrame = sourceLeftCenter
+hudAnimationSerial = hudAnimationSerial + 1
+cancelHudTween()
+local savedRestorePosition = launcherGui:GetAttribute(
+"HudRestorePosition"
+)
+if typeof(savedRestorePosition) == "UDim2" then
+hudRestorePosition = savedRestorePosition
+else
+hudRestorePosition = leftCenterFrame.Position
+end
+​while hudRestorePosition.X.Scale <= -0.5 do
+hudRestorePosition = UDim2.new(
+hudRestorePosition.X.Scale + 1,
+hudRestorePosition.X.Offset,
+hudRestorePosition.Y.Scale,
+hudRestorePosition.Y.Offset
+)
+end
+if Runtime.chilliIsOpen
+or launcherGui:GetAttribute("QuickHudHidden") == true
+then
+leftCenterFrame.Position = shiftOneScreenLeft(
+hudRestorePosition
+)
+launcherGui:SetAttribute(
+"HudRestorePosition",
+hudRestorePosition
+)
+if launcherGui:GetAttribute("QuickHudHidden") == true then
+leftCenterFrame.Visible = false
+sourceLeftCenterScreen.Enabled = false
+launcherGui:SetAttribute("LeftCenterHiddenByLibrary", true)
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+true
+)
+end
+else
+leftCenterFrame.Position = hudRestorePosition
+launcherGui:SetAttribute("HudRestorePosition", nil)
+end
+launcherRoot.Position = Runtime.chilliIsOpen
+and shiftOneScreenLeft(hudRestorePosition)
+or hudRestorePosition
+​connectSource(
+leftCenterFrame:GetPropertyChangedSignal("Position"),
+function()
+local shouldStayHidden =
+launcherGui:GetAttribute("QuickHudHidden") == true
+or Runtime.chilliIsOpen
+if shouldStayHidden then
+if not hudTween then
+local hiddenPosition = shiftOneScreenLeft(
+hudRestorePosition
+)
+if leftCenterFrame.Position ~= hiddenPosition then
+leftCenterFrame.Position = hiddenPosition
+end
+end
+refreshEffectiveLeftCenterHidden()
+return
+end
+launcherRoot.Position = leftCenterFrame.Position
+refreshEffectiveLeftCenterHidden()
+end
+)
+connectSource(
+leftCenterFrame:GetPropertyChangedSignal("Visible"),
+function()
+if launcherGui:GetAttribute("QuickHudHidden") == true
+and leftCenterFrame.Visible
+then
+leftCenterFrame.Visible = false
+end
+refreshEffectiveLeftCenterHidden()
+end
+)
+connectSource(
+sourceLeftCenterScreen:GetPropertyChangedSignal("Enabled"),
+function()
+if launcherGui:GetAttribute("QuickHudHidden") == true
+and sourceLeftCenterScreen.Enabled
+then
+sourceLeftCenterScreen.Enabled = false
+end
+refreshEffectiveLeftCenterHidden()
+end
+)
+for _, instance in ipairs({ sourceLeftCenter, sourceButtons, sourceShop }) do
+connectSource(
+instance:GetPropertyChangedSignal("AbsolutePosition"),
+queueChilliLauncherLayout
+)
+connectSource(
+instance:GetPropertyChangedSignal("AbsoluteSize"),
+queueChilliLauncherLayout
+)
+end
+connectSource(sourceButtons.ChildAdded, queueChilliLauncherLayout)
+connectSource(sourceButtons.ChildRemoved, queueChilliLauncherLayout)
+​queueChilliLauncherLayout()
+refreshEffectiveLeftCenterHidden()
+task.defer(frameChilliSpider)
+return true
+end
+​if sourceLeftCenterScreen then
+adoptLeftCenterSources(
+sourceLeftCenterScreen,
+sourceLeftCenter,
+sourceButtons,
+sourceShop,
+sourceShopIcon,
+sourceShopText
+)
+else
+task.spawn(function()
+local retryDeadline = os.clock() + 10
+while launcherGui.Parent
+and not sourceBound
+and os.clock() < retryDeadline
+do
+local screen, frame, buttons, shop, icon, text =
+findLeftCenterSources()
+if adoptLeftCenterSources(
+screen,
+frame,
+buttons,
+shop,
+icon,
+text
+) then
+break
+end
+task.wait(0.25)
+end
+end)
+end
+​trackRootConnection(playerGui.DescendantAdded:Connect(function()
+local screen, frame, buttons, shop, icon, text = findLeftCenterSources()
+if frame
+and (frame ~= leftCenterFrame or screen ~= sourceLeftCenterScreen)
+then
+disconnectSourceConnections()
+adoptLeftCenterSources(screen, frame, buttons, shop, icon, text)
+end
+end))
+​local HUD_RENDER_GUARD_NAME = "ChilliLibraryLeftCenterRenderGuard"
+​local function enforceHiddenLeftCenterBeforeRender()
+if not rootGui.Parent
+or not leftCenterFrame
+or not leftCenterFrame.Parent
+then
+return
+end
+​local manuallyHidden =
+launcherGui:GetAttribute("QuickHudHidden") == true
+if manuallyHidden and not hudTween then
+if leftCenterFrame.Visible then
+leftCenterFrame.Visible = false
+end
+if sourceLeftCenterScreen and sourceLeftCenterScreen.Enabled then
+sourceLeftCenterScreen.Enabled = false
+end
+launcherGui:SetAttribute("LeftCenterHiddenByLibrary", true)
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+true
+)
+elseif not manuallyHidden
+and launcherGui:GetAttribute("LeftCenterHiddenByLibrary") == true
+then
+leftCenterFrame.Visible = true
+launcherGui:SetAttribute("LeftCenterHiddenByLibrary", nil)
+if sourceLeftCenterScreen
+and launcherGui:GetAttribute(
+"LeftCenterScreenDisabledByLibrary"
+) == true
+then
+sourceLeftCenterScreen.Enabled = true
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+nil
+)
+end
+end
+​if hudTween then
+return
+end
+​local shouldStayHidden = manuallyHidden or Runtime.chilliIsOpen
+if not shouldStayHidden then
+return
+end
+​local hiddenPosition = shiftOneScreenLeft(hudRestorePosition)
+if leftCenterFrame.Position ~= hiddenPosition then
+leftCenterFrame.Position = hiddenPosition
+end
+end
+​pcall(function()
+RunService:UnbindFromRenderStep(HUD_RENDER_GUARD_NAME)
+end)
+RunService:BindToRenderStep(
+HUD_RENDER_GUARD_NAME,
+Enum.RenderPriority.Last.Value + 10000,
+enforceHiddenLeftCenterBeforeRender
+)
+​rootGui.Destroying:Connect(function()
+pcall(function()
+RunService:UnbindFromRenderStep(HUD_RENDER_GUARD_NAME)
+end)
+disconnectRootConnections()
+disconnectSourceConnections()
+end)
+​local function applyOriginalStrokeSizing()
+pcall(function()
+for _, inst in ipairs(rootGui:GetDescendants()) do
+if inst:IsA("UIStroke") then
+inst.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+inst.BorderStrokePosition = Enum.BorderStrokePosition.Outer
+inst.BorderOffset = UDim.new(0, 0)
+end
+end
+end)
+end
+​local function makeDraggable(handle, target, canStart, moved)
+handle.Active = true
+​local dragging = false
+local dragInput = nil
+local dragStart = Vector2.new(0, 0)
+local startPosition = Vector2.new(0, 0)
+​local function cancelDrag()
+dragging = false
+dragInput = nil
+end
+​trackRootConnection(handle.InputBegan:Connect(function(input)
+if dragging or input.UserInputState ~= Enum.UserInputState.Begin then
+return
+end
+if input.UserInputType ~= Enum.UserInputType.MouseButton1
+and input.UserInputType ~= Enum.UserInputType.Touch
+then
+return
+end
+if canStart and not canStart() then
+return
+end
+​local region = rootGui.AbsoluteSize
+if region.X <= 0 or region.Y <= 0 then
+return
+end
+​local pointer = Vector2.new(input.Position.X, input.Position.Y)
+local handlePosition = handle.AbsolutePosition
+local handleSize = handle.AbsoluteSize
+if pointer.X < handlePosition.X
+or pointer.X > handlePosition.X + handleSize.X
+or pointer.Y < handlePosition.Y
+or pointer.Y > handlePosition.Y + handleSize.Y
+then
+return
+end
+​for _, child in ipairs(handle:GetDescendants()) do
+if child:IsA("GuiButton") and child.Visible then
+local childPosition = child.AbsolutePosition
+local childSize = child.AbsoluteSize
+if pointer.X >= childPosition.X
+and pointer.X <= childPosition.X + childSize.X
+and pointer.Y >= childPosition.Y
+and pointer.Y <= childPosition.Y + childSize.Y
+then
+return
+end
+end
+end
+​dragging = true
+dragInput = input.UserInputType == Enum.UserInputType.Touch
+and input
+or nil
+dragStart = pointer
+startPosition = Vector2.new(
+target.Position.X.Scale + target.Position.X.Offset / region.X,
+target.Position.Y.Scale + target.Position.Y.Offset / region.Y
+)
+end))
+​trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+if not dragging then
+return
+end
+local inputMoved = (dragInput and input == dragInput)
+or (not dragInput
+and input.UserInputType == Enum.UserInputType.MouseMovement)
+if not inputMoved then
+return
+end
+​local region = rootGui.AbsoluteSize
+if region.X <= 0 or region.Y <= 0 then
+return
+end
+​local delta = Vector2.new(input.Position.X, input.Position.Y)
+- dragStart
+local targetFraction = Vector2.new(
+target.AbsoluteSize.X / region.X,
+target.AbsoluteSize.Y / region.Y
+)
+local anchor = target.AnchorPoint
+local minX = targetFraction.X * anchor.X
+local maxX = 0.998 - targetFraction.X * (1 - anchor.X)
+local minY = targetFraction.Y * anchor.Y
+​local maxY = 0.98 + targetFraction.Y * anchor.Y
+​target.Position = UDim2.fromScale(
+math.clamp(
+startPosition.X + delta.X / region.X,
+math.min(minX, maxX),
+math.max(minX, maxX)
+),
+math.clamp(
+startPosition.Y + delta.Y / region.Y,
+math.min(minY, maxY),
+math.max(minY, maxY)
+)
+)
+if moved then
+moved(target.Position)
+end
+end))
+​trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+if not dragging then
+return
+end
+if input.UserInputType == Enum.UserInputType.MouseButton1
+or input == dragInput
+then
+cancelDrag()
+end
+end))
+​return {
+Cancel = cancelDrag,
+IsDragging = function()
+return dragging
+end,
+}
+end
+​local SAFE_TOUCH_TAP_DISTANCE = 10
+local safeTouchPresses = setmetatable({}, { __mode = "k" })
+​local function pointInsideGui(guiObject, point)
+if not guiObject or not guiObject.Parent or not guiObject.Visible then
+return false
+end
+local position = guiObject.AbsolutePosition
+local size = guiObject.AbsoluteSize
+return point.X >= position.X
+and point.X <= position.X + size.X
+and point.Y >= position.Y
+and point.Y <= position.Y + size.Y
+end
+​trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+local press = safeTouchPresses[input]
+if not press then
+return
+end
+local point = Vector2.new(input.Position.X, input.Position.Y)
+press.Position = point
+if (point - press.Start).Magnitude > SAFE_TOUCH_TAP_DISTANCE then
+press.Cancelled = true
+end
+end))
+​trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+local press = safeTouchPresses[input]
+if not press then
+return
+end
+local point = Vector2.new(input.Position.X, input.Position.Y)
+press.Position = point
+press.Ended = true
+if (point - press.Start).Magnitude > SAFE_TOUCH_TAP_DISTANCE
+or not pointInsideGui(press.Button, point)
+then
+press.Cancelled = true
+end
+​task.delay(0.2, function()
+if safeTouchPresses[input] == press then
+safeTouchPresses[input] = nil
+end
+end)
+end))
+​local function connectSafeActivation(button, callback)
+button.Active = true
+button.InputBegan:Connect(function(input)
+if input.UserInputType ~= Enum.UserInputType.Touch
+or input.UserInputState ~= Enum.UserInputState.Begin
+then
+return
+end
+local point = Vector2.new(input.Position.X, input.Position.Y)
+if not pointInsideGui(button, point) then
+return
+end
+safeTouchPresses[input] = {
+Button = button,
+Start = point,
+Position = point,
+Cancelled = false,
+Ended = false,
+}
+end)
+​return button.Activated:Connect(function(input)
+if input and input.UserInputType == Enum.UserInputType.Touch then
+local press = safeTouchPresses[input]
+if not press
+or press.Button ~= button
+or press.Cancelled
+or not pointInsideGui(button, press.Position)
+then
+return
+end
+end
+callback()
+end)
+end
+​local function makeButtonFeedback(button)
+local normalSize = button.Size
+local hovered = false
+local activeTween = nil
+​local function scaledSize(multiplier)
+return UDim2.new(
+normalSize.X.Scale * multiplier,
+normalSize.X.Offset * multiplier,
+normalSize.Y.Scale * multiplier,
+normalSize.Y.Offset * multiplier
+)
+end
+​local function tweenSize(size, duration)
+if activeTween then
+activeTween:Cancel()
+end
+activeTween = TweenService:Create(
+button,
+TweenInfo.new(duration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+{ Size = size }
+)
+activeTween:Play()
+end
+​button.MouseEnter:Connect(function()
+hovered = true
+tweenSize(scaledSize(1.04), 0.12)
+end)
+​button.MouseLeave:Connect(function()
+hovered = false
+tweenSize(normalSize, 0.12)
+end)
+​button.MouseButton1Down:Connect(function()
+tweenSize(scaledSize(0.96), 0.06)
+end)
+​button.MouseButton1Up:Connect(function()
+tweenSize(hovered and scaledSize(1.04) or normalSize, 0.09)
+end)
+end
+​Runtime.menuSize = rootGui:GetAttribute("MenuSize") or mainFrame.Size
+local defaultOpenPosition = UDim2.fromScale(0.5, 0.475)
+Runtime.windowRestPosition = defaultOpenPosition
+Runtime.windowDragController = nil
+local function offsetWindowPosition(position, yScale)
+return UDim2.new(
+position.X.Scale,
+position.X.Offset,
+position.Y.Scale + yScale,
+position.Y.Offset
+)
+end
+local function openingWindowPosition()
+return offsetWindowPosition(Runtime.windowRestPosition, 0.245)
+end
+local function closedWindowPosition()
+return UDim2.new(
+Runtime.windowRestPosition.X.Scale,
+Runtime.windowRestPosition.X.Offset,
+1.55,
+0
+)
+end
+local WINDOW_OPEN_DURATION = 0.34
+local WINDOW_CLOSE_DURATION = 0.26
+local animationLocked = false
+local windowTween = nil
+local windowTweenConnection = nil
+local windowAnimationSerial = 0
+​Runtime.windowAnimating = false
+​local ContentScale = {
+Base = Runtime.menuSize,
+Listeners = {},
+ReflowTabs = nil,
+X = 1,
+Y = 1,
+}
+​function ContentScale.OnChanged(callback)
+table.insert(ContentScale.Listeners, callback)
+callback(ContentScale.X, ContentScale.Y)
+return callback
+end
+​function ContentScale.Refresh()
+local function axisScale(baseValue, currentValue)
+if baseValue > 0 and currentValue > 0 then
+return math.max(1, currentValue / baseValue)
+end
+return 1
+end
+​local nextX = axisScale(
+ContentScale.Base.X.Scale,
+Runtime.menuSize.X.Scale
+)
+local nextY = axisScale(
+ContentScale.Base.Y.Scale,
+Runtime.menuSize.Y.Scale
+)
+if math.abs(nextX - ContentScale.X) < 0.0001
+and math.abs(nextY - ContentScale.Y) < 0.0001
+then
+return
+end
+ContentScale.X = nextX
+ContentScale.Y = nextY
+​for index = #ContentScale.Listeners, 1, -1 do
+local callback = ContentScale.Listeners[index]
+local ok, keep = pcall(callback, nextX, nextY)
+if not ok then
+elseif keep == false then
+table.remove(ContentScale.Listeners, index)
+end
+end
+if ContentScale.ReflowTabs then
+ContentScale.ReflowTabs()
+end
+end
+​do
+local aspectConstraint = objects.obj24
+local ratio = aspectConstraint.AspectRatio
+​aspectConstraint.Parent = nil
+​local viewport = camera and camera.ViewportSize or Vector2.new(1280, 720)
+if viewport.X < 1 or viewport.Y < 1 then
+viewport = Vector2.new(1280, 720)
+end
+​local topLeftInset, bottomRightInset = Vector2.new(0, 0), Vector2.new(0, 0)
+pcall(function()
+topLeftInset, bottomRightInset = GuiService:GetGuiInset()
+end)
+​local regionX = math.max(
+viewport.X - topLeftInset.X - bottomRightInset.X,
+1
+)
+local regionY = math.max(
+viewport.Y - topLeftInset.Y - bottomRightInset.Y,
+1
+)
+​local width = Runtime.menuSize.X.Scale * regionX
+local height = Runtime.menuSize.Y.Scale * regionY
+if ratio > 0 then
+if width / height > ratio then
+width = height * ratio
+else
+height = width / ratio
+end
+end
+​if UserInputService.TouchEnabled
+and not UserInputService.KeyboardEnabled
+and not UserInputService.MouseEnabled
+then
+local mobileMultiplier = math.min(
+1.3,
+(regionX * 0.98) / math.max(width, 1),
+(regionY * 0.98) / math.max(height, 1)
+)
+width = width * mobileMultiplier
+height = height * mobileMultiplier
+end
+​Runtime.menuSize = UDim2.fromScale(width / regionX, height / regionY)
+rootGui:SetAttribute("MenuSize", Runtime.menuSize)
+mainFrame.Size = Runtime.menuSize
+ContentScale.Base = Runtime.menuSize
+end
+​local function setLeftCenterHidden(hidden)
+hudAnimationSerial = hudAnimationSerial + 1
+local serial = hudAnimationSerial
+cancelHudTween()
+​if hidden then
+local savedRestorePosition = launcherGui:GetAttribute(
+"HudRestorePosition"
+)
+if typeof(savedRestorePosition) == "UDim2" then
+hudRestorePosition = savedRestorePosition
+end
+while hudRestorePosition.X.Scale <= -0.5 do
+hudRestorePosition = UDim2.new(
+hudRestorePosition.X.Scale + 1,
+hudRestorePosition.X.Offset,
+hudRestorePosition.Y.Scale,
+hudRestorePosition.Y.Offset
+)
+end
+launcherGui:SetAttribute(
+"HudRestorePosition",
+hudRestorePosition
+)
+elseif leftCenterFrame
+and launcherGui:GetAttribute("LeftCenterHiddenByLibrary") == true
+then
+leftCenterFrame.Visible = true
+launcherGui:SetAttribute("LeftCenterHiddenByLibrary", nil)
+if sourceLeftCenterScreen
+and launcherGui:GetAttribute(
+"LeftCenterScreenDisabledByLibrary"
+) == true
+then
+sourceLeftCenterScreen.Enabled = true
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+nil
+)
+end
+end
+​local target = hidden
+and shiftOneScreenLeft(hudRestorePosition)
+or hudRestorePosition
+refreshEffectiveLeftCenterHidden()
+local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quint)
+​if leftCenterFrame then
+hudTween = TweenService:Create(
+leftCenterFrame,
+tweenInfo,
+{ Position = target }
+)
+​TweenService:Create(
+launcherRoot,
+tweenInfo,
+{
+Position = hudRestorePosition,
+}
+):Play()
+else
+hudTween = TweenService:Create(
+launcherRoot,
+tweenInfo,
+{
+Position = hudRestorePosition,
+}
+)
+end
+local activeHudTween = hudTween
+hudTweenConnection = activeHudTween.Completed:Connect(function()
+if serial ~= hudAnimationSerial
+or hudTween ~= activeHudTween
+then
+return
+end
+​if hudTweenConnection then
+hudTweenConnection:Disconnect()
+hudTweenConnection = nil
+end
+hudTween = nil
+​local manuallyHidden =
+launcherGui:GetAttribute("QuickHudHidden") == true
+local shouldStayHidden = manuallyHidden or Runtime.chilliIsOpen
+if shouldStayHidden then
+if leftCenterFrame then
+leftCenterFrame.Position = shiftOneScreenLeft(
+hudRestorePosition
+)
+if manuallyHidden then
+leftCenterFrame.Visible = false
+launcherGui:SetAttribute(
+"LeftCenterHiddenByLibrary",
+true
+)
+end
+end
+launcherGui:SetAttribute(
+"HudRestorePosition",
+hudRestorePosition
+)
+if manuallyHidden and sourceLeftCenterScreen then
+sourceLeftCenterScreen.Enabled = false
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+true
+)
+end
+else
+if leftCenterFrame then
+leftCenterFrame.Position = hudRestorePosition
+if launcherGui:GetAttribute(
+"LeftCenterHiddenByLibrary"
+) == true then
+leftCenterFrame.Visible = true
+launcherGui:SetAttribute(
+"LeftCenterHiddenByLibrary",
+nil
+)
+end
+end
+if sourceLeftCenterScreen
+and launcherGui:GetAttribute(
+"LeftCenterScreenDisabledByLibrary"
+) == true
+then
+sourceLeftCenterScreen.Enabled = true
+launcherGui:SetAttribute(
+"LeftCenterScreenDisabledByLibrary",
+nil
+)
+end
+launcherGui:SetAttribute("HudRestorePosition", nil)
+end
+launcherRoot.Position = hudRestorePosition
+refreshEffectiveLeftCenterHidden()
+queueChilliLauncherLayout()
+end)
+activeHudTween:Play()
+end
+​local function cancelWindowTween()
+windowAnimationSerial = windowAnimationSerial + 1
+if windowTweenConnection then
+windowTweenConnection:Disconnect()
+windowTweenConnection = nil
+end
+if windowTween then
+windowTween:Cancel()
+windowTween = nil
+end
+end
+​local function tweenWindowPosition(target, info, completed)
+cancelWindowTween()
+local serial = windowAnimationSerial
+local tween = TweenService:Create(mainFrame, info, {
+Position = target,
+})
+windowTween = tween
+windowTweenConnection = tween.Completed:Connect(function(playbackState)
+if serial ~= windowAnimationSerial or windowTween ~= tween then
+return
+end
+if windowTweenConnection then
+windowTweenConnection:Disconnect()
+windowTweenConnection = nil
+end
+windowTween = nil
+if playbackState == Enum.PlaybackState.Completed then
+completed()
+end
+end)
+tween:Play()
+end
+​local function playOpenAnimation(completed)
+if Runtime.chilliIsOpen then
+return
+end
+local resumeFromCurrentPosition = windowTween ~= nil
+animationLocked = true
+Runtime.windowAnimating = true
+Runtime.chilliIsOpen = true
+setLeftCenterHidden(true)
+​if not resumeFromCurrentPosition then
+mainFrame.Position = openingWindowPosition()
+end
+mainFrame.Size = Runtime.menuSize
+​tweenWindowPosition(Runtime.windowRestPosition, TweenInfo.new(
+WINDOW_OPEN_DURATION,
+Enum.EasingStyle.Quart,
+Enum.EasingDirection.Out
+), function()
+animationLocked = false
+Runtime.windowAnimating = false
+if completed then
+completed()
+end
+end)
+end
+​local function playCloseAnimation()
+if not Runtime.chilliIsOpen then
+return
+end
+​if Runtime.windowDragController then
+Runtime.windowDragController.Cancel()
+end
+animationLocked = true
+Runtime.windowAnimating = true
+Runtime.chilliIsOpen = false
+setLeftCenterHidden(
+launcherGui:GetAttribute("QuickHudHidden") == true
+)
+​mainFrame.Size = Runtime.menuSize
+tweenWindowPosition(closedWindowPosition(), TweenInfo.new(
+WINDOW_CLOSE_DURATION,
+Enum.EasingStyle.Quart,
+Enum.EasingDirection.In
+), function()
+animationLocked = false
+Runtime.windowAnimating = false
+end)
+end
+​local RESIZE_LIMITS = {
+MinWidth = 0.20,
+MaxWidth = 0.98,
+MinHeight = 0.22,
+MaxHeight = 0.98,
+}
+​local RESIZE_KEEPS_OPTION_WIDTH = false
+​local resizeGrip = Instance.new("TextButton")
+resizeGrip.Name = "ResizeGrip"
+resizeGrip.Active = true
+resizeGrip.AutoButtonColor = false
+resizeGrip.AnchorPoint = Vector2.new(1, 1)
+resizeGrip.BackgroundTransparency = 1
+resizeGrip.BorderSizePixel = 0
+resizeGrip.Position = UDim2.fromScale(0.998, 0.995)
+resizeGrip.Selectable = false
+resizeGrip.Size = UDim2.fromScale(0.05, 0.05)
+resizeGrip.Text = ""
+resizeGrip.ZIndex = 120
+resizeGrip.Parent = mainFrame
+​local resizeGripAspect = Instance.new("UIAspectRatioConstraint")
+resizeGripAspect.AspectRatio = 1
+resizeGripAspect.AspectType = Enum.AspectType.FitWithinMaxSize
+resizeGripAspect.DominantAxis = Enum.DominantAxis.Width
+resizeGripAspect.Parent = resizeGrip
+​local resizeGripBars = {}
+for _, bar in ipairs({
+{ 0.5, 0.5, 0.9 },
+{ 0.68, 0.68, 0.54 },
+{ 0.84, 0.84, 0.22 },
+}) do
+local piece = Instance.new("Frame")
+piece.Name = "GripBar"
+piece.Active = false
+piece.AnchorPoint = Vector2.new(0.5, 0.5)
+piece.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+piece.BackgroundTransparency = 0.35
+piece.BorderSizePixel = 0
+piece.Position = UDim2.fromScale(bar[1], bar[2])
+piece.Rotation = -45
+piece.Size = UDim2.fromScale(bar[3], 0.13)
+piece.ZIndex = 121
+piece.Parent = resizeGrip
+table.insert(resizeGripBars, piece)
+end
+​local function setResizeGripHighlight(highlighted)
+for _, piece in ipairs(resizeGripBars) do
+TweenService:Create(piece, TweenInfo.new(0.1), {
+BackgroundTransparency = highlighted and 0.05 or 0.35,
+}):Play()
+end
+end
+​local resizeDragging = false
+local resizeActiveTouch = nil
+local resizeStartPointer = Vector2.new(0, 0)
+local resizeStartSize = Vector2.new(0, 0)
+​local function applyResizeSize(widthPixels, heightPixels)
+local region = rootGui.AbsoluteSize
+if region.X <= 0 or region.Y <= 0 then
+return
+end
+Runtime.menuSize = UDim2.fromScale(
+math.clamp(
+widthPixels / region.X,
+RESIZE_LIMITS.MinWidth,
+RESIZE_LIMITS.MaxWidth
+),
+math.clamp(
+heightPixels / region.Y,
+RESIZE_LIMITS.MinHeight,
+RESIZE_LIMITS.MaxHeight
+)
+)
+rootGui:SetAttribute("MenuSize", Runtime.menuSize)
+mainFrame.Size = Runtime.menuSize
+ContentScale.Refresh()
+end
+​local function resizeFromInputPosition(position)
+local delta = Vector2.new(position.X, position.Y) - resizeStartPointer
+applyResizeSize(
+resizeStartSize.X + delta.X * 2,
+resizeStartSize.Y + delta.Y * 2
+)
+end
+​resizeGrip.MouseEnter:Connect(function()
+setResizeGripHighlight(true)
+end)
+​resizeGrip.MouseLeave:Connect(function()
+if not resizeDragging then
+setResizeGripHighlight(false)
+end
+end)
+​resizeGrip.InputBegan:Connect(function(input)
+if resizeDragging or input.UserInputState ~= Enum.UserInputState.Begin then
+return
+end
+if input.UserInputType ~= Enum.UserInputType.MouseButton1
+and input.UserInputType ~= Enum.UserInputType.Touch
+then
+return
+end
+local pointer = Vector2.new(input.Position.X, input.Position.Y)
+local gripPosition = resizeGrip.AbsolutePosition
+local gripSize = resizeGrip.AbsoluteSize
+if pointer.X < gripPosition.X
+or pointer.X > gripPosition.X + gripSize.X
+or pointer.Y < gripPosition.Y
+or pointer.Y > gripPosition.Y + gripSize.Y
+then
+return
+end
+resizeDragging = true
+resizeActiveTouch = input.UserInputType == Enum.UserInputType.Touch
+and input
+or nil
+resizeStartPointer = Vector2.new(input.Position.X, input.Position.Y)
+resizeStartSize = mainFrame.AbsoluteSize
+setResizeGripHighlight(true)
+end)
+​trackRootConnection(UserInputService.InputChanged:Connect(function(input)
+if not resizeDragging then
+return
+end
+if resizeActiveTouch then
+if input == resizeActiveTouch then
+resizeFromInputPosition(input.Position)
+end
+elseif input.UserInputType == Enum.UserInputType.MouseMovement then
+resizeFromInputPosition(input.Position)
+end
+end))
+​trackRootConnection(UserInputService.InputEnded:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1
+or input == resizeActiveTouch
+then
+if resizeDragging then
+resizeDragging = false
+resizeActiveTouch = nil
+setResizeGripHighlight(false)
+end
+end
+end))
+​ContentScale.OnChanged(function(scaleX, scaleY)
+resizeGrip.Position = UDim2.fromScale(
+1 - 0.002 / scaleX,
+1 - 0.005 / scaleY
+)
+resizeGrip.Size = UDim2.fromScale(0.05 / scaleX, 0.05 / scaleY)
+end)
+​ContentScale.OnChanged(function(scaleX, scaleY)
+topBar.Size = UDim2.new(1, 0, 0.125 / scaleY, 0)
+objects.obj12.Position = UDim2.new(
+0.06700000166893005 / scaleX,
+0,
+0.44999998
+)
+end)
